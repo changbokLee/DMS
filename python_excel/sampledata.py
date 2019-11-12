@@ -1,40 +1,65 @@
 from openpyxl import Workbook
-from openpyxl.worksheet.table import Table, TableStyleInfo
-from openpyxl.chart import(
-    AreaChart,
-    Reference,
-    Series
-)
+from openpyxl.chart import BarChart, Series, Reference
 
-wb = Workbook() # 워크북 만듬
-ws = wb.create_sheet() # sheet 생성
-ws.title = 'Fruit' 
+wb = Workbook(write_only=True)
+ws = wb.create_sheet()
 
-data = [
-    ['Apples', 10000, 5000, 8000, 6000],
-    ['Pears',   2000, 3000, 4000, 5000],
-    ['Bananas', 6000, 6000, 6500, 6000],
-    ['Oranges',  500,  300,  200,  700],
+rows = [
+    ('Number', 'Batch 1', 'Batch 2'),
+    (2, 10, 30),
+    (3, 40, 60),
+    (4, 50, 70),
+    (5, 20, 10),
+    (6, 10, 40),
+    (7, 50, 30),
 ]
 
-# 헤더 추가함
-ws.append(["Fruit", "2011", "2012", "2013", "2014"])
-for row in data:
+
+for row in rows:
     ws.append(row)
 
-tab = Table(displayName="Table1", ref="A1:E5")
 
-# 테이블 스타일 적용
-style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=False,
-                       showLastColumn=False, showRowStripes=True, showColumnStripes=True)
-tab.tableStyleInfo = style
-ws.add_table(tab)
+chart1 = BarChart()
+chart1.type = "col"
+chart1.style = 10
+chart1.title = "Bar Chart"
+chart1.y_axis.title = 'Test number'
+chart1.x_axis.title = 'Sample length (mm)'
 
-# 차트 만들기
-chart = AreaChart()
-chart.title ="Fruit"
-chart.style= 13
-chart.x_axis.title ="Years"
-chart.y_axis.title = "Fruit"
+data = Reference(ws, min_col=2, min_row=1, max_row=7, max_col=3)
+cats = Reference(ws, min_col=1, min_row=2, max_row=7)
+chart1.add_data(data, titles_from_data=True)
+chart1.set_categories(cats)
+chart1.shape = 4
+ws.add_chart(chart1, "A10")
 
-wb.save(filename ="table.xlsx") 
+from copy import deepcopy
+
+chart2 = deepcopy(chart1)
+chart2.style = 11
+chart2.type = "bar"
+chart2.title = "Horizontal Bar Chart"
+
+ws.add_chart(chart2, "G10")
+
+
+chart3 = deepcopy(chart1)
+chart3.type = "col"
+chart3.style = 12
+chart3.grouping = "stacked"
+chart3.overlap = 100
+chart3.title = 'Stacked Chart'
+
+ws.add_chart(chart3, "A27")
+
+
+chart4 = deepcopy(chart1)
+chart4.type = "bar"
+chart4.style = 13
+chart4.grouping = "percentStacked"
+chart4.overlap = 100
+chart4.title = 'Percent Stacked Chart'
+
+ws.add_chart(chart4, "G27")
+
+wb.save("bar.xlsx")
