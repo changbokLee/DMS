@@ -4,7 +4,6 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Fo
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.chart import (PieChart, Reference) 
 from openpyxl.chart.series import DataPoint
-import xlsxwriter
 
 # resume 헤드라인 작성
 wb = Workbook()
@@ -39,6 +38,7 @@ showColumnStripes= True)
 tab.tableStyleInfo = style
 ws.add_table(tab)
 
+
 # 스킬차트 만들기 ,리스트 사용
 skills = [ 
         ['language', 'Skills'],
@@ -53,11 +53,12 @@ for rows in skills:
 
 
 chart = PieChart()
-labels = Reference(ws, min_col=1, min_row=2, max_row=5 , range_string= None)
-data = Reference(ws, min_col=2, min_row=1, max_row=5 , range_string= None)
+chart.title = "Skill-Chart"
+labels = Reference(ws, min_col=1, min_row=2, range_string='resume!A6:A10' )
+data = Reference(ws, min_col=1, min_row=2, max_row=5, range_string= 'resume!B6:B10')
 chart.add_data(data, titles_from_data=True)
 chart.set_categories(labels)
-chart.title = "Skill-Chart"
+
 ws.add_chart(chart, "A15")
 
 # 저장
