@@ -1,6 +1,6 @@
 from openpyxl import load_workbook
 
-filepath = "C:\\Users\chang\OneDrive\바탕 화면\pytho_excel\Development_Mentoring-For-Upskill\Python_control_excel"
+filepath = ""
 wb =load_workbook(filepath)
 sheet = wb.active
 b1 = sheet['B1']
