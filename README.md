@@ -1,4 +1,4 @@
-## korean python mento
+# 코드리뷰 및 멘토멘티 레포
 
 <p>멘토링 2019.9~ </p>
 
